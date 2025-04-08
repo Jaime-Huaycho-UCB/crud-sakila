@@ -16,6 +16,9 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class FrameActors extends JFrame {
 
@@ -70,6 +73,12 @@ public class FrameActors extends JFrame {
 		});
 		btnDeleteActor.setBounds(234, 518, 117, 29);
 		contentPane.add(btnDeleteActor);
+		
+		JLabel lblNewLabel = new JLabel("Tabla Actor");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(6, 29, 570, 43);
+		contentPane.add(lblNewLabel);
 		loadData();
 	}
 
@@ -89,6 +98,9 @@ public class FrameActors extends JFrame {
 			this.dataColumns,
 			this.nameColumns
 		));
+		tableActors.getColumnModel().getColumn(0).setMinWidth(30);
+		tableActors.getColumnModel().getColumn(0).setPreferredWidth(40);
+		tableActors.getColumnModel().getColumn(0).setMaxWidth(70);
 	}
 
 	public void addActor(){
