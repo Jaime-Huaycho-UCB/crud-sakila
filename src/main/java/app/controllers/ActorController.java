@@ -47,4 +47,19 @@ public class ActorController {
         }
         return false;
     }
+
+    public boolean updateActor(int id,String firstName,String lastName){
+        try {
+            String query = "UPDATE actor SET first_name = ?, last_name = ? WHERE actor_id = ?";
+            PreparedStatement statement = MySql.connection.prepareStatement(query);
+            statement.setInt(3, id);
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

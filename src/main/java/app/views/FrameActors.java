@@ -25,6 +25,7 @@ public class FrameActors extends JFrame {
 
 	private String[] nameColumns = {"id","first name","last name","last update"};
 	private Object[][] dataColumns;
+	private JButton btnUpdateActor;
 
 	public FrameActors() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,8 +49,17 @@ public class FrameActors extends JFrame {
 				addActor();
 			}
 		});
-		btnAddActor.setBounds(401, 518, 117, 29);
+		btnAddActor.setBounds(379, 518, 139, 29);
 		contentPane.add(btnAddActor);
+		
+		btnUpdateActor = new JButton("Actuaizar actor");
+		btnUpdateActor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateActor();
+			}
+		});
+		btnUpdateActor.setBounds(64, 518, 139, 29);
+		contentPane.add(btnUpdateActor);
 		loadData();
 	}
 
@@ -77,8 +87,29 @@ public class FrameActors extends JFrame {
 		ActorController actorController = new ActorController();
 		if (actorController.createActor(firstName, lastName)){
 			loadData();
+			JOptionPane.showMessageDialog(null, "Se ingreso exitosamente al actor");
 		}else{
-			JOptionPane.showMessageDialog(null,"Hubo un error al ingresar al usurio");
+			JOptionPane.showMessageDialog(null,"Hubo un error al ingresar al actor");
+		}
+	}
+
+	public void updateActor(){
+		int selectedRow = tableActors.getSelectedRow();
+		if (selectedRow != -1){
+			int id = Integer.parseInt(dataColumns[selectedRow][0].toString());
+			String firstName = dataColumns[selectedRow][1].toString();
+			String lastName = dataColumns[selectedRow][2].toString();
+			String newFirstName = JOptionPane.showInputDialog("Ingresa el primer nombre del actor a actualzar", firstName);
+			String newLastName = JOptionPane.showInputDialog("Ingresa el apellido del actor a actualzar", lastName);
+			ActorController actorController = new ActorController();
+			if (actorController.updateActor(id, newFirstName, newLastName)){
+				loadData();
+				JOptionPane.showMessageDialog(null, "Se actualizo exitosamente al actor");
+			}else{
+				JOptionPane.showMessageDialog(null,"Hubo un error al actualizar al actor");
+			}
+		}else{
+			JOptionPane.showMessageDialog(null,"Seleccione un actor a actualizar");
 		}
 	}
 }
