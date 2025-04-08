@@ -1,5 +1,6 @@
 package app.controllers;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -31,5 +32,19 @@ public class ActorController {
             e.printStackTrace();
         }
         return actors;
+    }
+
+    public boolean createActor(String firstName,String lastName){
+        try {
+            String query = "INSERT INTO actor(first_name,last_name) values (?,?)";
+            PreparedStatement statement = MySql.connection.prepareStatement(query);
+            statement.setString(1,firstName);
+            statement.setString(2,lastName);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

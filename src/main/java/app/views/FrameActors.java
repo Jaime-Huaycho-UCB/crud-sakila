@@ -3,6 +3,7 @@ package app.views;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -12,6 +13,9 @@ import app.models.Actor;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FrameActors extends JFrame {
 
@@ -23,7 +27,6 @@ public class FrameActors extends JFrame {
 	private Object[][] dataColumns;
 
 	public FrameActors() {
-		loadData();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 582, 622);
 		contentPane = new JPanel();
@@ -38,10 +41,16 @@ public class FrameActors extends JFrame {
 		
 		tableActors = new JTable();
 		scrollPane.setViewportView(tableActors);
-		tableActors.setModel(new DefaultTableModel(
-			dataColumns,
-			nameColumns
-		));
+		
+		JButton btnAddActor = new JButton("Agregar actor");
+		btnAddActor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				addActor();
+			}
+		});
+		btnAddActor.setBounds(401, 518, 117, 29);
+		contentPane.add(btnAddActor);
+		loadData();
 	}
 
 	public void loadData(){
@@ -56,5 +65,20 @@ public class FrameActors extends JFrame {
 			dataColumns[i][3] = actors.get(i).getLastUpdate();
 		}
 		this.dataColumns = dataColumns;
+		tableActors.setModel(new DefaultTableModel(
+			this.dataColumns,
+			this.nameColumns
+		));
+	}
+
+	public void addActor(){
+		String firstName = JOptionPane.showInputDialog("Ingrese al primero nombre del actor nuevo");
+		String lastName = JOptionPane.showInputDialog("Ingresa el apellido del actor nuevo");
+		ActorController actorController = new ActorController();
+		if (actorController.createActor(firstName, lastName)){
+			loadData();
+		}else{
+			JOptionPane.showMessageDialog(null,"Hubo un error al ingresar al usurio");
+		}
 	}
 }
