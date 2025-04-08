@@ -62,4 +62,17 @@ public class ActorController {
         }
         return false;
     }
+
+    public boolean deleteActor(int id){
+        try {
+            String query = "DELETE FROM actor WHERE actor_id = ?";
+            PreparedStatement statement = MySql.connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

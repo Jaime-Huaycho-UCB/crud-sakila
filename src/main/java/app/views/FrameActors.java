@@ -26,6 +26,7 @@ public class FrameActors extends JFrame {
 	private String[] nameColumns = {"id","first name","last name","last update"};
 	private Object[][] dataColumns;
 	private JButton btnUpdateActor;
+	private JButton btnDeleteActor;
 
 	public FrameActors() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +61,15 @@ public class FrameActors extends JFrame {
 		});
 		btnUpdateActor.setBounds(64, 518, 139, 29);
 		contentPane.add(btnUpdateActor);
+		
+		btnDeleteActor = new JButton("Eliminar actor");
+		btnDeleteActor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteActor();
+			}
+		});
+		btnDeleteActor.setBounds(234, 518, 117, 29);
+		contentPane.add(btnDeleteActor);
 		loadData();
 	}
 
@@ -110,6 +120,22 @@ public class FrameActors extends JFrame {
 			}
 		}else{
 			JOptionPane.showMessageDialog(null,"Seleccione un actor a actualizar");
+		}
+	}
+
+	public void deleteActor(){
+		int selectedRow = tableActors.getSelectedRow();
+		if (selectedRow != -1){
+			int id = Integer.parseInt(dataColumns[selectedRow][0].toString());
+			ActorController actorController = new ActorController();
+			if (actorController.deleteActor(id)){
+				loadData();
+				JOptionPane.showMessageDialog(null, "Se elimino exitosamente al actor");
+			}else{
+				JOptionPane.showMessageDialog(null,"Hubo un error al eliminar al actor");
+			}
+		}else{
+			JOptionPane.showMessageDialog(null,"Seleccione un actor a eliminar");
 		}
 	}
 }
