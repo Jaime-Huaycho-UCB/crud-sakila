@@ -1,5 +1,6 @@
 package app.controllers;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +15,7 @@ public class ActorController {
     public ActorController(){
         this.mySql = new MySql();
     }
-    public ArrayList<Actor> getAll(){
+    private ArrayList<Actor> getAll(){
         ArrayList<Actor> actors = new ArrayList<>();
         try {
             Statement statement = MySql.connection.createStatement();
@@ -32,6 +33,35 @@ public class ActorController {
             e.printStackTrace();
         }
         return actors;
+    }
+
+    private ArrayList<Actor> getActorsWithSearch(String toSearch){
+        ArrayList<Actor> actors = new ArrayList<>();
+        try {
+            String process = "{CALL search_actor(?)}";
+            CallableStatement statement = MySql.connection.prepareCall(process);
+            statement.setString(1, toSearch);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                int id = result.getInt("actor_id");
+                String firstName = result.getString("first_name");
+                String lastName = result.getString("last_name");
+                String lastUpdate = result.getString("last_update");
+                Actor actor = new Actor(id, firstName, lastName, lastUpdate);
+                actors.add(actor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return actors;
+    }
+
+    public ArrayList<Actor> getActors(String toSearch){
+        if (toSearch.length()==0){
+            return getAll();
+        }else{
+            return getActorsWithSearch(toSearch);
+        }
     }
 
     public boolean createActor(String firstName,String lastName){

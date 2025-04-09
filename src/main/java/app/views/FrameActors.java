@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import app.controllers.ActorController;
@@ -19,6 +21,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import javax.swing.JTextField;
 
 public class FrameActors extends JFrame {
 
@@ -30,10 +33,12 @@ public class FrameActors extends JFrame {
 	private Object[][] dataColumns;
 	private JButton btnUpdateActor;
 	private JButton btnDeleteActor;
+	private JLabel lblNewLabel_1;
+	private JTextField inToSearch;
 
 	public FrameActors() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 582, 622);
+		setBounds(100, 100, 582, 655);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -41,7 +46,7 @@ public class FrameActors extends JFrame {
 		contentPane.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(64, 84, 454, 408);
+		scrollPane.setBounds(64, 152, 454, 408);
 		contentPane.add(scrollPane);
 		
 		tableActors = new JTable();
@@ -53,7 +58,7 @@ public class FrameActors extends JFrame {
 				addActor();
 			}
 		});
-		btnAddActor.setBounds(379, 518, 139, 29);
+		btnAddActor.setBounds(379, 572, 139, 29);
 		contentPane.add(btnAddActor);
 		
 		btnUpdateActor = new JButton("Actuaizar actor");
@@ -62,7 +67,7 @@ public class FrameActors extends JFrame {
 				updateActor();
 			}
 		});
-		btnUpdateActor.setBounds(64, 518, 139, 29);
+		btnUpdateActor.setBounds(64, 572, 139, 29);
 		contentPane.add(btnUpdateActor);
 		
 		btnDeleteActor = new JButton("Eliminar actor");
@@ -71,7 +76,7 @@ public class FrameActors extends JFrame {
 				deleteActor();
 			}
 		});
-		btnDeleteActor.setBounds(234, 518, 117, 29);
+		btnDeleteActor.setBounds(234, 572, 117, 29);
 		contentPane.add(btnDeleteActor);
 		
 		JLabel lblNewLabel = new JLabel("Tabla Actor");
@@ -79,12 +84,37 @@ public class FrameActors extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(6, 29, 570, 43);
 		contentPane.add(lblNewLabel);
+		
+		lblNewLabel_1 = new JLabel("Buscar:");
+		lblNewLabel_1.setBounds(64, 103, 45, 16);
+		contentPane.add(lblNewLabel_1);
+		
+		inToSearch = new JTextField();
+		inToSearch.setBounds(121, 98, 397, 26);
+		contentPane.add(inToSearch);
+		inToSearch.setColumns(10);
+		inToSearch.setText("");
+		inToSearch.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				loadData();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				loadData();
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				loadData();
+			}
+		});
 		loadData();
 	}
 
 	public void loadData(){
+		String toSearch = (inToSearch.getText() == null ? "" : inToSearch.getText());
 		ActorController actorController = new ActorController();
-		ArrayList<Actor> actors = actorController.getAll();
+		ArrayList<Actor> actors = actorController.getActors(toSearch);
 		int sizeActors = actors.size();
 		Object[][] dataColumns = new Object[sizeActors][4];
 		for (int i=0;i<actors.size();i++){
