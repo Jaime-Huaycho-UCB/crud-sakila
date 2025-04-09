@@ -1,0 +1,8 @@
+DELIMITER $$
+CREATE PROCEDURE search_actor(IN to_search VARCHAR(100))
+BEGIN
+    SELECT * FROM actor
+    WHERE first_name LIKE CONCAT('%', to_search, '%')
+    OR last_name LIKE CONCAT('%',to_search,'%');
+END $$
+DELIMITER ;
